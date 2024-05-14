@@ -98,8 +98,8 @@ export const Azure = {
 
 export const Google = {
   ExampleEndpoint: "https://generativelanguage.googleapis.com/",
-  ChatPath: "v1beta/models/gemini-pro:generateContent",
-  VisionChatPath: "v1beta/models/gemini-pro-vision:generateContent",
+   ChatPath: (modelName: string) => `v1beta/models/${modelName}:generateContent`,
+  VisionChatPath: (modelName: string) => `v1beta/models/${modelName}:generateContent`,
 
   // /api/openai/v1/chat/completions
   ChatPath: (modelName: string) => `v1beta/models/${modelName}:generateContent`,
@@ -140,6 +140,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
+  "gemini-pro-vision": "2023-12",
 };
 
 const openaiModels = [
