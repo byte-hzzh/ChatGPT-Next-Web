@@ -49,7 +49,7 @@ export class GeminiProApi implements LLMApi {
     });
 
     // google requires that role in neighboring messages must not be the same
-    for (let i = 0; i < messages.length - 1; ) {
+    for (let i = 0; i < messages.length - 1;) {
       // Check if current and next item both have the role "model"
       if (messages[i].role === messages[i + 1].role) {
         // Concatenate the 'parts' of the current and next item
@@ -116,11 +116,6 @@ export class GeminiProApi implements LLMApi {
     const controller = new AbortController();
     options.onController?.(controller);
     try {
-      let googleChatPath = visionModel
-        ? Google.VisionChatPath(modelConfig.model)
-        : Google.ChatPath(modelConfig.model);
-      let chatPath = this.path(googleChatPath);
-
       // let baseUrl = accessStore.googleUrl;
 
       if (!baseUrl) {
@@ -144,7 +139,7 @@ export class GeminiProApi implements LLMApi {
         () => controller.abort(),
         REQUEST_TIMEOUT_MS,
       );
-      
+
       if (shouldStream) {
         let responseText = "";
         let remainText = "";
@@ -253,7 +248,7 @@ export class GeminiProApi implements LLMApi {
           options.onError?.(
             new Error(
               "Message is being blocked for reason: " +
-                resJson.promptFeedback.blockReason,
+              resJson.promptFeedback.blockReason,
             ),
           );
         }
