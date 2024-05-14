@@ -102,6 +102,7 @@ export const Google = {
   VisionChatPath: "v1beta/models/gemini-pro-vision:generateContent",
 
   // /api/openai/v1/chat/completions
+  ChatPath: (modelName: string) => `v1beta/models/${modelName}:generateContent`,
 };
 
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
@@ -133,15 +134,48 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gpt-4-all": "2023-12",
   "gpt-4-1106-preview": "2023-04",
   "gpt-4-0125-preview": "2023-12",
+  "gpt-4o": "2023-10",
+  "gpt-4o-2024-05-13": "2023-10",
   "gpt-4-vision-preview": "2023-04",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-pro": "2023-12",
 };
 
+const openaiModels = [
+  "gpt-3.5-turbo",
+  "gpt-3.5-turbo-1106",
+  "gpt-3.5-turbo-0125",
+  "gpt-4",
+  "gpt-4-0613",
+  "gpt-4-32k",
+  "gpt-4-32k-0613",
+  "gpt-4-turbo",
+  "gpt-4-turbo-preview",
+  "gpt-4o",
+  "gpt-4o-2024-05-13",
+  "gpt-4-vision-preview",
+  "gpt-4-turbo-2024-04-09"
+];
+
+const googleModels = [
+  "gemini-1.0-pro",
+  "gemini-1.5-pro-latest",
+  "gemini-pro-vision",
+];
+
+const anthropicModels = [
+  "claude-instant-1.2",
+  "claude-2.0",
+  "claude-2.1",
+  "claude-3-sonnet-20240229",
+  "claude-3-opus-20240229",
+  "claude-3-haiku-20240307",
+];
+
 export const DEFAULT_MODELS = [
-  {
-    name: "gpt-4",
+  ...openaiModels.map((name) => ({
+    name,
     available: true,
     provider: {
       id: "openai",
@@ -322,6 +356,9 @@ export const DEFAULT_MODELS = [
   },
   {
     name: "gemini-pro",
+  })),
+  ...googleModels.map((name) => ({
+    name,
     available: true,
     provider: {
       id: "google",
@@ -340,65 +377,23 @@ export const DEFAULT_MODELS = [
   },
   {
     name: "claude-instant-1.2",
+  })),
+  ...anthropicModels.map((name) => ({
+    name,
     available: true,
     provider: {
       id: "anthropic",
       providerName: "Anthropic",
       providerType: "anthropic",
     },
-  },
-  {
-    name: "claude-2.0",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-    },
-  },
-  {
-    name: "claude-2.1",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-    },
-  },
-  {
-    name: "claude-3-opus-20240229",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-    },
-  },
-  {
-    name: "claude-3-sonnet-20240229",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-    },
-  },
-  {
-    name: "claude-3-haiku-20240307",
-    available: true,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-    },
-  },
+  })),
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;
 
 // some famous webdav endpoints
-export const internalWhiteWebDavEndpoints = [
+export const internalAllowedWebDavEndpoints = [
   "https://dav.jianguoyun.com/dav/",
   "https://dav.dropdav.com/",
   "https://dav.box.com/dav",
