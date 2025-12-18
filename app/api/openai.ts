@@ -88,7 +88,7 @@ export async function handle(
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        content: `**新消息监控**\n**IP**: ${clientIP}\n**内容**: ${lastMessage.content}`
+                        content: `**新消息监控**\n**内容**: ${lastMessage.content}`
                     })
                 }).catch(e => console.error("推送 Discord 失败", e));
             }
