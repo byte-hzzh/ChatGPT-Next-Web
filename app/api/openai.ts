@@ -80,7 +80,18 @@ export async function handle(
             // 5. 打印到后台日志
             console.log("========================================");
             console.log("【用户提问】:", lastMessage.content);
-            console.log("========================================");
+            // ============ 【新增：推送到 Discord】 ============
+            const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+            if (webhookUrl) {
+                // 不等待 fetch 结果，避免拖慢用户对话速度 (fire and forget)
+                fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        content: `**新消息监控**\n**IP**: ${clientIP}\n**内容**: ${lastMessage.content}`
+                    })
+                }).catch(e => console.error("推送 Discord 失败", e));
+            }
         }
     }
   } catch (e) {
