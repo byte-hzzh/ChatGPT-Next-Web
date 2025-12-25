@@ -33,14 +33,26 @@ async function dataUrlToBlob(dataUrl: string) {
 }
 
 function getUserIP(req: NextRequest) {
-  let ip = req.headers.get("x-forwarded-for");
-  
-  // Vercel 有时会返回多个 IP，格式为 "client, proxy1, proxy2"，我们取第一个
-  if (ip) {
-    ip = ip.split(",")[0].trim();
+  let ip = null;
+
+  // 【优先】Cloudflare 专用头：这是最准确的，专门用于透过 CF 获取真实 IP
+  ip = req.headers.get("cf-connecting-ip");
+
+  // 【其次】Vercel 专用头：Vercel 有时会将真实 IP 放在这里
+  if (!ip) {
+    ip = req.headers.get("x-vercel-forwarded-for");
   }
-  
-  // 如果没有 x-forwarded-for，尝试用 Next.js 提供的 req.ip (在某些运行时可用)
+
+  // 【标准】X-Forwarded-For：如果前面都没有，尝试解析标准转发链
+  // 格式通常是: "真实IP, 代理1, 代理2"
+  if (!ip) {
+    const xff = req.headers.get("x-forwarded-for");
+    if (xff) {
+      ip = xff.split(",")[0].trim();
+    }
+  }
+
+  // 【兜底】如果都拿不到，使用 Next.js 自带的解析（在某些环境可能是内网IP）
   if (!ip) {
     ip = req.ip || "Unknown IP";
   }
