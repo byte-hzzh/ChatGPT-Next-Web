@@ -79,35 +79,35 @@ async function request(req: NextRequest) {
   };
 
   // #1815 try to refuse some request to some models
-  if (serverConfig.customModels && req.body) {
-    try {
-      const clonedBody = await req.text();
-      fetchOptions.body = clonedBody;
+  // if (serverConfig.customModels && req.body) {
+  //   try {
+  //     const clonedBody = await req.text();
+  //     fetchOptions.body = clonedBody;
 
-      const jsonBody = JSON.parse(clonedBody) as { model?: string };
+  //     const jsonBody = JSON.parse(clonedBody) as { model?: string };
 
-      // not undefined and is false
-      if (
-        isModelNotavailableInServer(
-          serverConfig.customModels,
-          jsonBody?.model as string,
-          ServiceProvider["302.AI"] as string,
-        )
-      ) {
-        return NextResponse.json(
-          {
-            error: true,
-            message: `you are not allowed to use ${jsonBody?.model} model`,
-          },
-          {
-            status: 403,
-          },
-        );
-      }
-    } catch (e) {
-      console.error(`[302.AI] filter`, e);
-    }
-  }
+  //     // not undefined and is false
+  //     if (
+  //       isModelNotavailableInServer(
+  //         serverConfig.customModels,
+  //         jsonBody?.model as string,
+  //         ServiceProvider["302.AI"] as string,
+  //       )
+  //     ) {
+  //       return NextResponse.json(
+  //         {
+  //           error: true,
+  //           message: `you are not allowed to use ${jsonBody?.model} model`,
+  //         },
+  //         {
+  //           status: 403,
+  //         },
+  //       );
+  //     }
+  //   } catch (e) {
+  //     console.error(`[302.AI] filter`, e);
+  //   }
+  // }
   try {
     const res = await fetch(fetchUrl, fetchOptions);
 
