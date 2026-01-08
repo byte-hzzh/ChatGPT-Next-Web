@@ -66,7 +66,7 @@ export const DEFAULT_CONFIG = {
   modelConfig: {
     model: "gpt-4o-mini" as ModelType,
     providerName: "OpenAI" as ServiceProvider,
-    temperature: 1.4,
+    temperature: 1.2,
     top_p: 1,
     max_tokens: 8192,
     presence_penalty: 0,
@@ -195,7 +195,7 @@ export const useAppConfig = createPersistStore(
   }),
   {
     name: StoreKey.Config,
-    version: 4.1,
+    version: 4.2,
 
     merge(persistedState, currentState) {
       const state = persistedState as ChatConfig | undefined;
@@ -213,7 +213,10 @@ export const useAppConfig = createPersistStore(
 
     migrate(persistedState, version) {
       const state = persistedState as ChatConfig;
-
+      // 新增下面这段逻辑
+      if (version < 4.2) {
+        state.modelConfig.temperature = 1.2; // 强制老用户升级到 1.4
+      }
       if (version < 3.4) {
         state.modelConfig.sendMemory = true;
         state.modelConfig.historyMessageCount = 4;
