@@ -159,6 +159,7 @@ function TopBanner() {
   if (!isVisible) {
     return null;
   }
+  return null
   return (
     <div
       className={styles["top-banner"]}
